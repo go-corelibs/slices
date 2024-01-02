@@ -1,4 +1,4 @@
-module github.com/go-curses/corelibs/slices
+module github.com/go-corelibs/slices
 
 go 1.21.0
 
