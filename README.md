@@ -2,7 +2,7 @@
 [![codecov](https://codecov.io/gh/go-corelibs/slices/graph/badge.svg?token=JCylkSZcov)](https://codecov.io/gh/go-corelibs/slices)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-corelibs/slices)](https://goreportcard.com/report/github.com/go-corelibs/slices)
 
-# go-corelibs/slices - go slice type utilities
+# slices - go slice type utilities
 
 slices is a package doing all sorts of things with slices of stuff.
 
