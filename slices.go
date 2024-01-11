@@ -237,3 +237,28 @@ func DuplicateCounts[V comparable, S ~[]V](src S) (counts map[V]int) {
 	}
 	return
 }
+
+// Cut is the slices version of strings.Cut
+func Cut[V comparable, S ~[]V](src, sep S) (before, after S, found bool) {
+	var count int
+	if count = len(sep); count == 0 {
+		before = src
+		return
+	}
+	for idx, item := range src {
+		if found = item == sep[0]; found {
+			for jdx, other := range sep {
+				if found = src[idx+jdx] == other; !found {
+					break
+				}
+			}
+			if found {
+				before = src[:idx]
+				after = src[idx+count:]
+				return
+			}
+		}
+	}
+	before = src
+	return
+}
