@@ -4,7 +4,7 @@ SHELL := /bin/bash
 
 VERSION_TAGS        += CORELIBS
 CORELIBS_MK_SUMMARY := Go-CoreLibs.mk
-CORELIBS_MK_VERSION := v0.1.9
+CORELIBS_MK_VERSION := v0.1.10
 
 GOPKG_KEYS          ?=
 GOPKG_AUTO_CORELIBS ?= true
@@ -185,6 +185,7 @@ test:
 coverage:
 	@go test -race -coverprofile=coverage.out -covermode=atomic -coverpkg=./... -v ./...
 	@go tool cover -html=coverage.out -o=coverage.html
+	@go tool cover -func=coverage.out
 
 goconvey:
 	@echo "# running goconvey... (press <CTRL+c> to stop)"
