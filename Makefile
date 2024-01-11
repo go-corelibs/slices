@@ -2,6 +2,6 @@
 
 VERSION_TAGS += SLICES
 SLICES_MK_SUMMARY := go-corelibs/slices
-SLICES_MK_VERSION := v1.0.1
+SLICES_MK_VERSION := v1.1.0
 
 include CoreLibs.mk
