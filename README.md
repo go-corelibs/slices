@@ -14,37 +14,28 @@ slices is a package doing all sorts of things with slices of stuff.
 
 # Examples
 
-## Retype
+## Cut
 
 ``` go
 func main() {
-    // json.Unmarshal provided this src slice in the awesome but not always
-    // useful []interface{} type
-    src := []interface{}{
-        "strings",
-        "are",
-        "things",
-    }
-    // let's retype it as a []string slice
-    strs, ok := slice.Retype[string](src)
-    // strs == []string{"strings", "are", "things"}
-    // ok == true
+    slice := []string{"Before", "things", "|", "After", "things"}
+    before, after, found := Cut(slice, []string{"|"})
+    // found == true
+    // before == []string{"Before", "things"}
+    // after == []string{"After", "things"}
 }
 ```
 
+## Carve
+
 ``` go
 func main() {
-    // json.Unmarshal provided this src slice in the awesome but not always
-    // useful []interface{} type
-    src := []interface{}{
-        "strings",
-        "are",
-        "things",
-    }
-    // let's retype it as a []string slice
-    strs, ok := slice.Retype[string](src)
-    // strs == []string{"strings", "are", "things"}
-    // ok == true
+    slice := []rune(`This is STARTa sliceEND of runes`)
+    before, middle, after, found := Carve(slice, []rune("START"), []rune("END"))
+    // found == true
+    // before == []rune("This is ")
+    // middle == []rune("a slice")
+    // after == []rune(" of runes")
 }
 ```
 
