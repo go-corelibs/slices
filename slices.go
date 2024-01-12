@@ -39,11 +39,11 @@ func Insert[V interface{}, S ~[]V](slice S, at int, values ...V) (modified S) {
 	return
 }
 
-// Prune removes all instances of the specified value from a copy of the given slice
-func Prune[V comparable, S ~[]V](slice S, value V) (modified S) {
+// Prune removes all instances of the specified values from a copy of the given slice
+func Prune[V comparable, S ~[]V](slice S, values ...V) (modified S) {
 	modified = make(S, 0)
 	for _, v := range slice {
-		if v != value {
+		if !Within(v, values) {
 			modified = append(modified, v)
 		}
 	}
