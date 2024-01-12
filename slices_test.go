@@ -169,4 +169,18 @@ func TestSlices(t *testing.T) {
 		So(before, ShouldEqual, []string{"one", "two", "many", "cooks", "in", "the", "kitchen"})
 		So(after, ShouldEqual, []string(nil))
 	})
+
+	Convey("Carve", t, func() {
+		src := []rune("Before \\Qliteral\\E after")
+		b, m, a, f := Carve(src, []rune("\\Q"), []rune("\\E"))
+		So(f, ShouldEqual, true)
+		So(string(b), ShouldEqual, `Before `)
+		So(string(m), ShouldEqual, `literal`)
+		So(string(a), ShouldEqual, ` after`)
+		b, m, a, f = Carve(src, []rune("\\NOPE"), []rune("\\E"))
+		So(f, ShouldEqual, false)
+		So(string(b), ShouldEqual, string(src))
+		So(string(m), ShouldEqual, ``)
+		So(string(a), ShouldEqual, ``)
+	})
 }

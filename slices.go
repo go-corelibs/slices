@@ -262,3 +262,21 @@ func Cut[V comparable, S ~[]V](src, sep S) (before, after S, found bool) {
 	before = src
 	return
 }
+
+// Carve finds the `start` and `end` markers in `src` and carves out the
+// "before carve", "middle of start/end range" and "after carve" segments. If
+// the `start` and `end` range is not `found` then the `before` will contain
+// the entire `src` input
+func Carve[V comparable, S ~[]V](src, start, end S) (before, middle, after S, found bool) {
+	if b0, a0, f0 := Cut(src, start); f0 {
+		if b1, a1, f1 := Cut(a0, end); f1 {
+			before = b0
+			middle = b1
+			after = a1
+			found = true
+			return
+		}
+	}
+	before = src
+	return
+}
