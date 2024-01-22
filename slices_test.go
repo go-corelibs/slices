@@ -183,4 +183,18 @@ func TestSlices(t *testing.T) {
 		So(string(m), ShouldEqual, ``)
 		So(string(a), ShouldEqual, ``)
 	})
+
+	Convey("CarveString", t, func() {
+		src := "Before \\Qliteral\\E after"
+		b, m, a, f := CarveString(src, "\\Q", "\\E")
+		So(f, ShouldEqual, true)
+		So(b, ShouldEqual, `Before `)
+		So(m, ShouldEqual, `literal`)
+		So(a, ShouldEqual, ` after`)
+		b, m, a, f = CarveString(src, "\\NOPE", "\\E")
+		So(f, ShouldEqual, false)
+		So(b, ShouldEqual, src)
+		So(m, ShouldEqual, ``)
+		So(a, ShouldEqual, ``)
+	})
 }

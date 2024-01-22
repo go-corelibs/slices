@@ -280,3 +280,15 @@ func Carve[V comparable, S ~[]V](src, start, end S) (before, middle, after S, fo
 	before = src
 	return
 }
+
+// CarveString recasts the given ~string arguments to []rune slices, calls
+// Carve and recasts the []rune slices returns values back to the original
+// type
+func CarveString[V ~string](src, start, end V) (before, middle, after V, found bool) {
+	b, m, a, ok := Carve([]rune(src), []rune(start), []rune(end))
+	found = ok
+	before = V(b)
+	middle = V(m)
+	after = V(a)
+	return
+}
