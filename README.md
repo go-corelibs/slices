@@ -26,16 +26,28 @@ func main() {
 }
 ```
 
-## Carve
+## Carve, CarveString
 
 ``` go
 func main() {
+    // slices.Carve is a generic list carving function which is most easily
+    // demonstrated with a slice of runes yet useful for any comparable slice
     slice := []rune(`This is STARTa sliceEND of runes`)
     before, middle, after, found := Carve(slice, []rune("START"), []rune("END"))
     // found == true
     // before == []rune("This is ")
     // middle == []rune("a slice")
     // after == []rune(" of runes")
+
+    // slices.CarveString is a convenient wrapper around slices.Carve geared
+    // for use with ~string types, making the above slices.Carve example look
+    // like this:
+    s := `This is STARTa a stringEND of characters`
+    b, m, a, ok := CarveString(s, "START", "END")
+    // ok == true
+    // before == "This is "
+    // middle == "a string"
+    // after == " of characters"
 }
 ```
 
