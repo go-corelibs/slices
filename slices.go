@@ -14,6 +14,10 @@
 
 package slices
 
+import (
+	"slices"
+)
+
 // Copy creates a new slice (array) from the given slice
 func Copy[V interface{}, S ~[]V](slice S) (copied S) {
 	copied = make(S, len(slice))
@@ -245,19 +249,17 @@ func Cut[V comparable, S ~[]V](src, sep S) (before, after S, found bool) {
 		before = src
 		return
 	}
-	for idx, item := range src {
-		if found = item == sep[0]; found {
-			for jdx, other := range sep {
-				if found = src[idx+jdx] == other; !found {
-					break
-				}
-			}
-			if found {
-				before = src[:idx]
-				after = src[idx+count:]
-				return
-			}
+	srcLen, sepLen := len(src), len(sep)
+	for idx := 0; idx < srcLen; idx++ {
+
+		if remainder := srcLen - idx; sepLen > remainder {
+			break
+		} else if found = slices.Equal(src[idx:idx+sepLen], sep); found {
+			before = src[:idx]
+			after = src[idx+sepLen:]
+			return
 		}
+
 	}
 	before = src
 	return
