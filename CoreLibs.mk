@@ -4,7 +4,7 @@ SHELL := /bin/bash
 
 VERSION_TAGS        += CORELIBS
 CORELIBS_MK_SUMMARY := Go-CoreLibs.mk
-CORELIBS_MK_VERSION := v0.1.13
+CORELIBS_MK_VERSION := v0.1.15
 
 GOPKG_KEYS          ?=
 GOPKG_AUTO_CORELIBS ?= true
@@ -23,8 +23,13 @@ LOCAL_CORELIBS_PATH ?= ..
 define __list_gopkgs
 $(if ${GOPKG_KEYS},$(foreach key,${GOPKG_KEYS},$(shell \
 		PKG="$($(key)_GO_PACKAGE)"; \
+		VER="$($(key)_LATEST_VER)"; \
 		if [ -n "$${PKG}" -a "$${PKG}" != "nil" ]; then \
-			echo "$${PKG}$(1)"; \
+			if [ -n "$${VER}" -a -n "$(1)" ]; then \
+				echo "$${PKG}@$${VER}"; \
+			else \
+				echo "$${PKG}$(1)"; \
+			fi; \
 		fi; \
 	)))
 endef
@@ -134,11 +139,21 @@ local: export FOUND_PKGS=$(call __list_gopkgs)
 local: export FOUND_LIBS=$(call __list_corelibs)
 local:
 	@if [ -n "$${FOUND_PKGS}" -o -n "$${FOUND_LIBS}" ]; then \
-		for found in $${FOUND_PKGS} $${FOUND_LIBS}; do \
+		for found in $${FOUND_LIBS}; do \
 			name=`basename $${found}`; \
 			echo "# go mod local go-corelibs/$${name}"; \
 			go mod edit -replace=$${found}=${LOCAL_CORELIBS_PATH}/$${name}; \
 		done; \
+		$(foreach key,${GOPKG_KEYS},\
+			if [ -n "$($(key)_LOCAL_PATH)" ]; then \
+				if [ -d "$($(key)_LOCAL_PATH)" ]; then \
+					echo "# go mod local $($(key)_GO_PACKAGE)"; \
+					go mod edit -replace=$($(key)_GO_PACKAGE)=$($(key)_LOCAL_PATH); \
+				else \
+					echo "# error: $($(key)_GO_PACKAGE) not found"; \
+				fi; \
+			fi; \
+		) \
 	else \
 		echo "# nothing to do"; \
 	fi
@@ -147,11 +162,17 @@ unlocal: export FOUND_PKGS=$(call __list_gopkgs)
 unlocal: export FOUND_LIBS=$(call __list_corelibs)
 unlocal:
 	@if [ -n "$${FOUND_PKGS}" -o -n "$${FOUND_LIBS}" ]; then \
-		for found in $${FOUND_PKGS} $${FOUND_LIBS}; do \
+		for found in $${FOUND_LIBS}; do \
 			name=`basename $${found}`; \
 			echo "# go mod unlocal go-corelibs/$${name}"; \
 			go mod edit -dropreplace=$${found}; \
 		done; \
+		$(foreach key,${GOPKG_KEYS},\
+			if [ -n "$($(key)_LOCAL_PATH)" ]; then \
+				echo "# go mod unlocal $($(key)_GO_PACKAGE)"; \
+				go mod edit -dropreplace=$($(key)_GO_PACKAGE); \
+			fi; \
+		) \
 	else \
 		echo "# nothing to do"; \
 	fi
